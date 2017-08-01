@@ -4,19 +4,16 @@
 <meta charset="utf-8" />
 <title>カメラのテスト</title>
 <meta name = "viewport" content = "width = device-width, initial-scale = 1, user-scalable = no">
-<link rel="shortcut icon" href="img/common/favicon.ico" />
-<link rel="stylesheet" href="css/common.css" type="text/css" />
-<link rel="stylesheet" href="css/base.css" type="text/css" />
-<link rel="stylesheet" href="css/page.css" type="text/css" />
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
 VR Demo Application<br>
 <br>
 <br>
 <label>写真</label><br>
+<form action="/send" method="post" enctype="multipart/form-data">
 <input type="file" accept="image/*">
 <br>
+<input type="submit" name="submit" value="送信"/>
+</form>
 </body>
 </html>
