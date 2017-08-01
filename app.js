@@ -8,7 +8,7 @@ var appEnv = cfenv.getAppEnv();
 var app = express();
 var watson = require('watson-developer-cloud');
 console.log(appEnv);
-var vr_credentials = appEnv.getServiceCreds('visual-recognition-1');
+var vr_credentials = appEnv.getServiceCreds('visualrecognition-for-darkvision');
 console.log(vr_credentials);
 var visualRecognition = new watson.VisualRecognitionV3({
   version_date: '2015-05-19',
