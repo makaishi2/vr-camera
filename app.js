@@ -6,6 +6,7 @@ var multer  = require('multer');
 var os = require('os');
 var async = require('async');
 var extend = require('extend');
+var sprintf = require('sprintf').sprintf;
 var TWENTY_SECONDS = 20000;
 
 if (fs.existsSync('./env.js')) {
@@ -44,7 +45,7 @@ var upload = multer({
 app.post('/send', upload.single('image'), function(req, res) {
      console.log( req.file );
      console.log( req.body );
-     var params = { images_file: fs.createReadStream(req.file.path) };
+     var params = { images_file: fs.createReadStream(req.file.path), 'Accept-Language': 'ja' };
 
     var methods = [];
     params.classifier_ids = ['default', 'food'];
@@ -94,20 +95,34 @@ app.post('/send', upload.single('image'), function(req, res) {
             console.log('=====PART=====');
             var result = "";
             var result1 = combine.value.raw.classify.images[0].classifiers;
-            console.log(result1);
-            result1.forEach(function(val1,index1,ar1){
+ //           console.log(result1);
+            result1.forEach(function(val1, index1,ar1){
                 var name = val1.name;
+                var name_j;
+                var list = [];
+                if ( name === 'default' ) { name_j = 'デフォルト'; }
+                if ( name === 'food' ) { name_j = '食物'; }
                 console.log( "name: " + name );
-                result = result + "name: " + name + "\n";
+                result = result + "分類器: " + name_j + "\n";
                 var result2 = val1.classes;
-                result2.forEach(function(val2,index2,ar2){
+                result2.forEach(function(val2, index2, ar2){
                     var classname = val2.class;
-                    var score = val2.score;
-                    console.log(classname + ": " + score);
-                    result = result + "\t" + classname + ": " + score + "\n";
+                    var score = sprintf('%.3f', val2.score);
+                    list.push(score + ':' + classname);
+//                    console.log(classname + ": " + score);
                 });
+                console.log('before');
+                console.log(list);
+                list.sort(function(a, b) {return a < b;});
+                console.log('after');
+                console.log(list);
+                list.forEach(function(val3, index3, ar3) {
+                    console.log(val3);
+                    result = result + val3 + '\n';
+                });
+                result = result + '\n';
             });
-            console.log(result);  
+//            console.log(result);  
             res.header('Content-Type', 'text/plain;charset=utf-8');
             res.send(result);
         } else {
