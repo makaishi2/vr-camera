@@ -2,20 +2,80 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<title>カメラのテスト</title>
+<title>VRサンプルアプリ</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    $("#send").click(function (event) {
+        var form = $('#fileUploadForm')[0];
+        var data = new FormData(form);
+        $("#send").prop("disabled", true);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/send",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                var elem =  document.getElementById("result");
+                elem.innerHTML = data;
+                console.log("SUCCESS : ", data);
+                $("#send").prop("disabled", false);
+            },
+            error: function (e) {
+                $("#result").text(e.responseText);
+                console.log("ERROR : ", e);
+                $("#send").prop("disabled", false);
+            }
+        });
+    });
+});
+
+$(function(){
+    $("#fileUploadForm").change(function(){
+    console.log(this.file);
+        if (!this.files.length) {
+            alert('ファイルが選択されていません');
+            return;
+        }
+        var file = this.files[0];
+        var canvas = $("#canvas");
+        var ctx = canvas[0].getContext('2d');
+        var image = new Image();
+        var fr = new FileReader();
+        fr.onload = function(evt) {
+            image.onload = function() {
+                var cnvsH = 240;
+                var cnvsW = image.naturalWidth*cnvsH/image.naturalHeight;
+                canvas.attr('width', cnvsW);
+                canvas.attr('height', cnvsH);
+                ctx.drawImage(image, 0, 0, cnvsW, cnvsH);
+            }
+            image.src = evt.target.result;
+        }
+    fr.readAsDataURL(file);
+    })
+})
+
+</script>
 <meta name = "viewport" content = "width = device-width, initial-scale = 1, user-scalable = no">
 </head>
 <body>
-VR Demo Application<br>
+<h2>VR サンプルアプリ</h2>
 <br>
+<div><canvas id="canvas"></canvas></div>
 <br>
-<label>写真</label><br>
-<form action="/send" method="post" enctype="multipart/form-data">
+<form action="/send" method="post" enctype="multipart/form-data" id="fileUploadForm">
 <br>
 <input type="file" name="image" accept="image/*">
 <br>
 <br>
-<input type="submit" name="submit" value="送信"/>
+<input type="button" name="button" value="送信" id="send"/>
 </form>
+<hr>
+<div id="result"></div>
 </body>
 </html>

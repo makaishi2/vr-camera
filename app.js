@@ -103,27 +103,20 @@ app.post('/send', upload.single('image'), function(req, res) {
                 if ( name === 'default' ) { name_j = 'デフォルト'; }
                 if ( name === 'food' ) { name_j = '食物'; }
                 console.log( "name: " + name );
-                result = result + "分類器: " + name_j + "\n";
+                result = result + "分類器: " + name_j + "<br>";
                 var result2 = val1.classes;
                 result2.forEach(function(val2, index2, ar2){
                     var classname = val2.class;
                     var score = sprintf('%.3f', val2.score);
                     list.push(score + ':' + classname);
-//                    console.log(classname + ": " + score);
                 });
-                console.log('before');
-                console.log(list);
-                list.sort(function(a, b) {return a < b;});
-                console.log('after');
-                console.log(list);
+                list.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
                 list.forEach(function(val3, index3, ar3) {
                     console.log(val3);
-                    result = result + val3 + '\n';
+                    result = result + val3 + '<br>';
                 });
-                result = result + '\n';
+                result = result + '<br>';
             });
-//            console.log(result);  
-            res.header('Content-Type', 'text/plain;charset=utf-8');
             res.send(result);
         } else {
             res.status(400).json(combine.error);
