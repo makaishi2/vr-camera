@@ -161,7 +161,13 @@ app.post('/send', upload.single('image'), function(req, res) {
                     var gender_j = "";
                     if ( gender.gender === 'MALE' ) { gender_j = '男性';}
                     if ( gender.gender === 'FEMALE' ) { gender_j = '女性';}
-                    list3.push( score1 + ": " + age.min + "歳 - " + age.max + "歳     " + score2 + ": " + gender_j );
+                    var item;
+                    if ( age.min ) {
+                        item = score1 + ": " + age.min + "歳 - " + age.max + "歳     " + score2 + ": " + gender_j;
+                    } else {
+                        item = score1 + ": " + age.max + "歳以下   " + score2 + ": " + gender_j;
+                    }
+                    list3.push(item);
                 })
                 if ( list3.length ) {
                     console.log('FACE');
