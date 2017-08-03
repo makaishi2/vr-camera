@@ -21,6 +21,7 @@ $(document).ready(function () {
             timeout: 600000,
             success: function (data) {
                 var elem =  document.getElementById("result");
+                elem.style.fontSize = '70%';
                 elem.innerHTML = data;
                 console.log("SUCCESS : ", data);
                 $("#send").prop("disabled", false);
@@ -35,38 +36,36 @@ $(document).ready(function () {
 });
 
 $(function(){
-    $("#fileUploadForm").change(function(){
-    console.log(this.file);
-        if (!this.files.length) {
-            alert('ファイルが選択されていません');
-            return;
-        }
-        var file = this.files[0];
-        var canvas = $("#canvas");
-        var ctx = canvas[0].getContext('2d');
-        var image = new Image();
-        var fr = new FileReader();
-        fr.onload = function(evt) {
-            image.onload = function() {
-                var cnvsH = 240;
-                var cnvsW = image.naturalWidth*cnvsH/image.naturalHeight;
-                canvas.attr('width', cnvsW);
-                canvas.attr('height', cnvsH);
-                ctx.drawImage(image, 0, 0, cnvsW, cnvsH);
-            }
-            image.src = evt.target.result;
-        }
-    fr.readAsDataURL(file);
-    })
+  $('#fileUploadForm').on('change', 'input[type="file"]', function(e) {
+console.log( "entered callback");
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    var $preview = $(".preview");
+    var t = this;
+    if(file.type.indexOf("image") < 0){
+      return false;
+    }
+    reader.onload = (function(file) {
+      return function(e) {
+        $preview.empty();
+        $preview.append($('<img>').attr({
+                  src: e.target.result,
+                  width: "150px",
+                  class: "preview",
+                  title: file.name
+              }));
+      };
+    })(file);
+    reader.readAsDataURL(file);
+  });
 })
 
 </script>
-<meta name = "viewport" content = "width = device-width, initial-scale = 1, user-scalable = no">
 </head>
 <body>
-<h2>VR サンプルアプリ</h2>
+<h3>VR サンプルアプリ</h3>
 <br>
-<div><canvas id="canvas"></canvas></div>
+<div class="preview"> </div>
 <br>
 <form action="/send" method="post" enctype="multipart/form-data" id="fileUploadForm">
 <br>

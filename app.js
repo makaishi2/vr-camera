@@ -16,9 +16,15 @@ if (fs.existsSync('./env.js')) {
 var appEnv = cfenv.getAppEnv();
 var vr_credentials = appEnv.getServiceCreds('visualrecognition-for-darkvision');
 var visualRecognition = new watson.VisualRecognitionV3({
-  version_date: '2015-05-19',
-  api_key: vr_credentials.api_key
+    version_date: '2015-05-19',
+    api_key: vr_credentials.api_key
 });
+
+var classifier_id;
+if (process.env.classifier_id) {
+    classifier_id = process.env.classifier_id;
+    console.log( "classifier_id: " + classifier_id);
+}
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
@@ -49,6 +55,10 @@ app.post('/send', upload.single('image'), function(req, res) {
 
     var methods = [];
     params.classifier_ids = ['default', 'food'];
+    if ( classifier_id ) {
+        params.classifier_ids.push( classifier_id );
+    }
+    console.log(params.classifier_ids);
     params.threshold = 0.5;
     methods.push('classify');
 //    methods.push('detectFaces');
@@ -98,8 +108,8 @@ app.post('/send', upload.single('image'), function(req, res) {
  //           console.log(result1);
             result1.forEach(function(val1, index1,ar1){
                 var name = val1.name;
-                var name_j;
                 var list = [];
+                var name_j = 'カスタム';
                 if ( name === 'default' ) { name_j = 'デフォルト'; }
                 if ( name === 'food' ) { name_j = '食物'; }
                 console.log( "name: " + name );
