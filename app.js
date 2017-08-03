@@ -62,7 +62,7 @@ app.post('/send', upload.single('image'), function(req, res) {
     params.threshold = 0.5;
     methods.push('classify');
     methods.push('recognizeText');
-//    methods.push('detectFaces');
+    methods.push('detectFaces');
 
     async.parallel(methods.map(function(method) {
         var fn = visualRecognition[method].bind(visualRecognition, params);
@@ -105,8 +105,9 @@ app.post('/send', upload.single('image'), function(req, res) {
             console.log('=====PART=====');
             var result = "";
             var result1 = combine.value.raw.classify.images[0].classifiers;
-            var result4;
-            
+            var result4;  // for ocr
+            var result6;  // for face
+// 分類器結果出力            
             result1.forEach(function(val1, index1,ar1){
                 var name = val1.name;
                 var list1 = [];
@@ -114,7 +115,7 @@ app.post('/send', upload.single('image'), function(req, res) {
                 if ( name === 'default' ) { name_j = 'デフォルト'; }
                 if ( name === 'food' ) { name_j = '食物'; }
                 console.log( "name: " + name );
-                result = result + "分類器: " + name_j + "<br>";
+                result = result + "【分類器】" + name_j + "<br>";
                 var result2 = val1.classes;
                 result2.forEach(function(val2, index2, ar2){
                     var classname = val2.class;
@@ -128,22 +129,49 @@ app.post('/send', upload.single('image'), function(req, res) {
                 });
                 result = result + '<br>';
             });
-            
+// 文字認識結果出力            
             if ( combine.value.raw.recognizeText && combine.value.raw.recognizeText.images_processed ) {
                 result4 = combine.value.raw.recognizeText.images[0].words;
                 var list2 = [];
                 result4.forEach(function(val4, index4, ar4) {
                     var word = val4.word;
-                    var score = val4.score;
+                    var score = sprintf('%.3f', val4.score);
                     list2.push(score + ": " + word);
                 })
-                console.log(list2);
-                result = result + "文字認識: <br>";
-                list2.forEach(function(val5, index5, ar5) {
-                    console.log(val5);
-                    result = result + val5 + '<br>';
-                });
-               result = result + '<br>';
+                if ( list2.length ) {
+                    console.log('OCR');
+                    result = result + "【文字認識】<br>";
+                    list2.forEach(function(val5, index5, ar5) {
+                        console.log(val5);
+                        result = result + val5 + '<br>';
+                    });
+                   result = result + '<br>';
+               }
+            }
+// 顔認識結果出力
+            if ( combine.value.raw.detectFaces && combine.value.raw.detectFaces.images_processed ) {
+                result6 = combine.value.raw.detectFaces.images[0].faces;
+                var list3 = [];
+                result6.forEach(function(val6, index6, ar6) {
+                    var age = val6.age;
+                    var gender = val6.gender;
+                    var face_localtion = val6.face_location;
+                    var score1 = sprintf('%.3f', age.score);
+                    var score2 = sprintf('%.3f', gender.score);
+                    var gender_j = "";
+                    if ( gender.gender === 'MALE' ) { gender_j = '男性';}
+                    if ( gender.gender === 'FEMALE' ) { gender_j = '女性';}
+                    list3.push( score1 + ": " + age.min + "歳 - " + age.max + "歳     " + score2 + ": " + gender_j );
+                })
+                if ( list3.length ) {
+                    console.log('FACE');
+                    result = result + "【顔認識】<br>";
+                    list3.forEach(function(val7, index7, ar7) {
+                        console.log(val7);
+                        result = result + val7 + '<br>';
+                    });
+                   result = result + '<br>';
+               }
             }
 
             res.send(result);
