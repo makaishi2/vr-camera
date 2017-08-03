@@ -7,7 +7,7 @@ var os = require('os');
 var async = require('async');
 var extend = require('extend');
 var sprintf = require('sprintf').sprintf;
-var TWENTY_SECONDS = 20000;
+var API_TIMEOUT = 40000;  // msec
 
 if (fs.existsSync('./env.js')) {
     Object.assign(process.env, require('./env.js'));
@@ -61,13 +61,13 @@ app.post('/send', upload.single('image'), function(req, res) {
     console.log(params.classifier_ids);
     params.threshold = 0.5;
     methods.push('classify');
+    methods.push('recognizeText');
 //    methods.push('detectFaces');
-//    methods.push('recognizeText');
 
     async.parallel(methods.map(function(method) {
         var fn = visualRecognition[method].bind(visualRecognition, params);
         if (method === 'recognizeText' || method === 'detectFaces') {
-          return async.reflect(async.timeout(fn, TWENTY_SECONDS));
+          return async.reflect(async.timeout(fn, API_TIMEOUT));
         } else {
           return async.reflect(fn);
         }
@@ -105,10 +105,11 @@ app.post('/send', upload.single('image'), function(req, res) {
             console.log('=====PART=====');
             var result = "";
             var result1 = combine.value.raw.classify.images[0].classifiers;
- //           console.log(result1);
+            var result4;
+            
             result1.forEach(function(val1, index1,ar1){
                 var name = val1.name;
-                var list = [];
+                var list1 = [];
                 var name_j = 'カスタム';
                 if ( name === 'default' ) { name_j = 'デフォルト'; }
                 if ( name === 'food' ) { name_j = '食物'; }
@@ -118,15 +119,33 @@ app.post('/send', upload.single('image'), function(req, res) {
                 result2.forEach(function(val2, index2, ar2){
                     var classname = val2.class;
                     var score = sprintf('%.3f', val2.score);
-                    list.push(score + ':' + classname);
+                    list1.push(score + ': ' + classname);
                 });
-                list.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
-                list.forEach(function(val3, index3, ar3) {
+                list1.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
+                list1.forEach(function(val3, index3, ar3) {
                     console.log(val3);
                     result = result + val3 + '<br>';
                 });
                 result = result + '<br>';
             });
+            
+            if ( combine.value.raw.recognizeText && combine.value.raw.recognizeText.images_processed ) {
+                result4 = combine.value.raw.recognizeText.images[0].words;
+                var list2 = [];
+                result4.forEach(function(val4, index4, ar4) {
+                    var word = val4.word;
+                    var score = val4.score;
+                    list2.push(score + ": " + word);
+                })
+                console.log(list2);
+                result = result + "文字認識: <br>";
+                list2.forEach(function(val5, index5, ar5) {
+                    console.log(val5);
+                    result = result + val5 + '<br>';
+                });
+               result = result + '<br>';
+            }
+
             res.send(result);
         } else {
             res.status(400).json(combine.error);
