@@ -7,6 +7,8 @@
 <script>
 $(document).ready(function () {
     $("#send").click(function (event) {
+        var elem =  document.getElementById("result");
+        elem.innerHTML = '';
         var form = $('#fileUploadForm')[0];
         var data = new FormData(form);
         $("#send").prop("disabled", true);
@@ -36,40 +38,44 @@ $(document).ready(function () {
 });
 
 $(function(){
-  $('#fileUploadForm').on('change', 'input[type="file"]', function(e) {
-console.log( "entered callback");
-    var file = e.target.files[0];
-    var reader = new FileReader();
-    var $preview = $(".preview");
-    var t = this;
-    if(file.type.indexOf("image") < 0){
-      return false;
-    }
-    reader.onload = (function(file) {
-      return function(e) {
-        $preview.empty();
-        $preview.append($('<img>').attr({
-                  src: e.target.result,
-                  width: "200px",
-                  class: "preview",
-                  title: file.name
-              }));
-      };
-    })(file);
-    reader.readAsDataURL(file);
-  });
+    $('#fileUploadForm').on('change', 'input[type="file"]', function(e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        var $preview = $(".preview");
+        var t = this;
+        if(file.type.indexOf("image") < 0){
+            return false;
+        }
+        reader.onload = (function(file) {
+            return function(e) {
+                $preview.empty();
+                $preview.append($('<img>').attr({
+                    src: e.target.result,
+                    height: "200px",
+                    class: "preview",
+                    title: file.name
+                }));
+            };
+        })(file);
+        reader.readAsDataURL(file);
+    });
 })
 
 </script>
 </head>
 <body>
 <h3>Watson VR サンプルアプリ</h3>
-<br>
-<div class="preview"> </div>
-<br>
+<div style="height:200px" class="preview"> </div>
 <form action="/send" method="post" enctype="multipart/form-data" id="fileUploadForm">
 <br>
 <input type="file" name="image" accept="image/*">
+<br>
+<br>
+<input type="checkbox" id="vr_type" name="vr_type" value="1" checked="checked">一般種別
+<input type="checkbox" id="vr_type" name="vr_type" value="2">一般種別(食品)
+<input type="checkbox" id="vr_type" name="vr_type" value="3">カスタム
+<input type="checkbox" id="vr_type" name="vr_type" value="4">顔認識
+<input type="checkbox" id="vr_type" name="vr_type" value="5">文字認識
 <br>
 <br>
 <input type="button" name="button" value="VR分析開始" id="send"/>

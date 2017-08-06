@@ -49,20 +49,50 @@ var upload = multer({
 
 
 app.post('/send', upload.single('image'), function(req, res) {
-     console.log( req.file );
-     console.log( req.body );
-     var params = { images_file: fs.createReadStream(req.file.path), 'Accept-Language': 'ja' };
+    console.log( req.file );
+    console.log( req.body );
+     
+    var vr_type = req.body.vr_type;
+    if ( !vr_type ) {
+        res.status(400).send('parameter error!');
+    }
+    
+    console.log( vr_type );
+    var params = { images_file: fs.createReadStream(req.file.path), 'Accept-Language': 'ja' };
+    params.threshold = 0.5;
 
     var methods = [];
-    params.classifier_ids = ['default', 'food'];
-    if ( classifier_id ) {
-        params.classifier_ids.push( classifier_id );
+    var classifier_ids = [];
+
+    if (vr_type.indexOf('1') != -1) {
+        console.log("type 1");
+        classifier_ids.push('default');
     }
-    console.log(params.classifier_ids);
-    params.threshold = 0.5;
-    methods.push('classify');
-    methods.push('recognizeText');
-    methods.push('detectFaces');
+    if (vr_type.indexOf('2') != -1) {
+        console.log("type 2");
+        classifier_ids.push('food');
+    }
+    if (vr_type.indexOf('3') != -1 && classifier_id) {
+        console.log("type 3");
+        classifier_ids.push(classifier_id);
+    }
+    if ( classifier_ids.length ) {
+        methods.push('classify');
+    }
+    if (vr_type.indexOf('4') != -1) {
+        console.log("type 4");
+        methods.push('detectFaces');
+    }
+    if (vr_type.indexOf('5') != -1) {
+        console.log("type 5");
+        methods.push('recognizeText');
+    }
+    params.classifier_ids = classifier_ids;
+
+    if ( params.classifier_ids.length ) {
+        console.log(params.classifier_ids);
+    }
+    console.log(methods);
 
     async.parallel(methods.map(function(method) {
         var fn = visualRecognition[method].bind(visualRecognition, params);
@@ -104,31 +134,36 @@ app.post('/send', upload.single('image'), function(req, res) {
             console.log(combine.value);
             console.log('=====PART=====');
             var result = "";
-            var result1 = combine.value.raw.classify.images[0].classifiers;
-            var result4;  // for ocr
-            var result6;  // for face
+
 // 分類器結果出力            
-            result1.forEach(function(val1, index1,ar1){
-                var name = val1.name;
-                var list1 = [];
-                var name_j = 'カスタム';
-                if ( name === 'default' ) { name_j = 'デフォルト'; }
-                if ( name === 'food' ) { name_j = '食物'; }
-                console.log( "name: " + name );
-                result = result + "【分類器】" + name_j + "<br>";
-                var result2 = val1.classes;
-                result2.forEach(function(val2, index2, ar2){
-                    var classname = val2.class;
-                    var score = sprintf('%.3f', val2.score);
-                    list1.push(score + ': ' + classname);
+            if ( combine.value.raw.classify && combine.value.raw.classify.images_processed ) {
+                var result1 = combine.value.raw.classify.images[0].classifiers;
+                console.log(result1);
+                var result4;  // for ocr
+                var result6;  // for face
+                result1.forEach(function(val1, index1,ar1){
+                    var name = val1.name;
+                    var list1 = [];
+                    var name_j = 'カスタム';
+                    if ( name === 'default' ) { name_j = 'デフォルト'; }
+                    if ( name === 'food' ) { name_j = '食物'; }
+                    console.log( "name: " + name );
+                    result = result + "【分類器】" + name_j + "<br>";
+                    var result2 = val1.classes;
+                    result2.forEach(function(val2, index2, ar2){
+                        var classname = val2.class;
+                        var score = sprintf('%.3f', val2.score);
+                        list1.push(score + ': ' + classname);
+                    });
+                    list1.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
+                    list1.forEach(function(val3, index3, ar3) {
+                        console.log(val3);
+                        result = result + val3 + '<br>';
+                    });
+                    result = result + '<br>';
                 });
-                list1.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
-                list1.forEach(function(val3, index3, ar3) {
-                    console.log(val3);
-                    result = result + val3 + '<br>';
-                });
-                result = result + '<br>';
-            });
+            }
+                
 // 文字認識結果出力            
             if ( combine.value.raw.recognizeText && combine.value.raw.recognizeText.images_processed ) {
                 result4 = combine.value.raw.recognizeText.images[0].words;
@@ -148,6 +183,7 @@ app.post('/send', upload.single('image'), function(req, res) {
                    result = result + '<br>';
                }
             }
+
 // 顔認識結果出力
             if ( combine.value.raw.detectFaces && combine.value.raw.detectFaces.images_processed ) {
                 result6 = combine.value.raw.detectFaces.images[0].faces;
