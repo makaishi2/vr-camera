@@ -171,7 +171,12 @@ app.post('/send', upload.single('image'), function(req, res) {
                 result4.forEach(function(val4, index4, ar4) {
                     var word = val4.word;
                     var score = sprintf('%.3f', val4.score);
-                    list2.push(score + ": " + word);
+                    var left = val4.location.left;
+                    var top = val4.location.top;
+                    var width = val4.location.width;
+                    var height = val4.location.height;
+                    var location_text = sprintf( "%d,%d,%d,%d", left, top, width, height);
+                    list2.push(score + ": " + word + ": " + location_text);
                 })
                 if ( list2.length ) {
                     console.log('OCR');
@@ -191,19 +196,24 @@ app.post('/send', upload.single('image'), function(req, res) {
                 result6.forEach(function(val6, index6, ar6) {
                     var age = val6.age;
                     var gender = val6.gender;
-                    var face_localtion = val6.face_location;
+                    var location = val6.face_location;
                     var score1 = sprintf('%.3f', age.score);
                     var score2 = sprintf('%.3f', gender.score);
                     var gender_j = "";
                     if ( gender.gender === 'MALE' ) { gender_j = '男性';}
                     if ( gender.gender === 'FEMALE' ) { gender_j = '女性';}
+                    var left = location.left;
+                    var top = location.top;
+                    var width = location.width;
+                    var height = location.height;
+                    var location_text = sprintf( "%d,%d,%d,%d", left, top, width, height);
                     var item;
                     if ( age.min ) {
                         item = score1 + ": " + age.min + "歳 - " + age.max + "歳     " + score2 + ": " + gender_j;
                     } else {
                         item = score1 + ": " + age.max + "歳以下   " + score2 + ": " + gender_j;
                     }
-                    list3.push(item);
+                    list3.push(item + ': ' + location_text);
                 })
                 if ( list3.length ) {
                     console.log('FACE');

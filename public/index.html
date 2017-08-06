@@ -9,6 +9,48 @@ var canvasH;
 var canvasW;
 var imageH;
 var imageW;
+var ratioX;
+var ratioY;
+var ctx;
+var canvas;
+
+function divide_br( text ) {
+   var items = [];
+   var index = text.indexOf('<br>');
+   var count = 0
+   while( index != -1 ) {
+       var item = text.slice(0, index );
+       items.push(item);
+       text = text.slice(index + 4);
+       index = text.indexOf('<br>');
+   }
+   items.push(text);
+   return items;
+}
+
+function divide_location( text ) {
+    var text_result;
+    var index1 = text.indexOf(': ');
+    if ( index1 == -1 ) {
+        return null;
+    }
+    var text2 = text.slice( index1 + 2);
+    var index2 = text2.indexOf(': ');
+    if ( index2 == -1 ) {
+        return null;
+    }
+    var text3 = text2.slice( index2 + 2);
+    var index3 = text3.indexOf(': ');
+    if ( index3 == -1 ) {
+        text_result = text3;
+   } else {
+       text_result = text3.slice( index3 + 2);
+    }
+    var locs = text_result.split(',');
+    var location = { x: locs[0], y: locs[1], w: locs[2], h: locs[3] };
+console.log(location);    
+    return location;
+}
 
 $(document).ready(function () {
     $("#send").click(function (event) {
@@ -29,6 +71,19 @@ $(document).ready(function () {
             success: function (data) {
                 var elem =  document.getElementById("result");
                 elem.style.fontSize = '70%';
+                var items = divide_br( data );
+                var items2 = items.map(function(elem, index, ar) { return divide_location(elem); });
+                var items3 = items2.filter(function(elem, index, ar) { return( elem ); }); 
+                console.log(items3);
+                ctx.strokeStyle = "rgb(0, 0, 255)";
+                items3.forEach( function(value) {
+                    var x = value.x * ratioX;
+                    var y = value.y * ratioY;
+                    var w = value.w * ratioX;
+                    var h = value.h * ratioY;
+                    console.log( 'x:' + x + '  y:' + y + '  w:' + w + '   h:' + h);
+                    ctx.strokeRect(value.x * ratioX, value.y * ratioY, value.w * ratioX, value.h * ratioY);
+                });
                 elem.innerHTML = data;
                 console.log("SUCCESS : ", data);
                 $("#send").prop("disabled", false);
@@ -45,8 +100,8 @@ $(document).ready(function () {
 $(function(){
     $('#fileUploadForm').on('change', 'input[type="file"]', function(e) {
         var file = e.target.files[0];
-        var canvas = $("#canvas");
-        var ctx = canvas[0].getContext('2d');
+        canvas = $("#canvas");
+        ctx = canvas[0].getContext('2d');
         var image = new Image();
         var fr = new FileReader();
         if(file.type.indexOf("image") < 0){
@@ -58,6 +113,8 @@ $(function(){
                 canvasW = canvas[0].width;
                 imageH = 200;
                 imageW = canvasH*image.naturalWidth/image.naturalHeight;
+                ratioY = imageH / image.naturalHeight;
+                ratioX = imageW / image.naturalWidth;
                 ctx.clearRect(0, 0, canvasW, canvasH);
                 ctx.drawImage(image, 0, 0, imageW, imageH);
                 ctx.strokeRect(0, 0, imageW, imageH);
