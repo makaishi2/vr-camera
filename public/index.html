@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Watson VRサンプルアプリ</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.min.js"></script>
 <script>
 var canvasH;
 var canvasW;
@@ -69,22 +70,82 @@ $(document).ready(function () {
             cache: false,
             timeout: 600000,
             success: function (data) {
+                var output_text = '';
+console.log(data);
+        // 分類器の出力
+                var classifiers = data.classifiers;
+                if ( classifiers ) {
+                    classifiers.forEach( function(value) {
+                        var classes = value.classes;
+                        var name = value.name;
+                        if ( name === 'default' ) { name = 'デフォルト'; }
+                        if ( name === 'food' ) { name = '食品'; }
+                        output_text = output_text + '【分類器】'+ name +'<br>\n';
+                        var class_items = [];
+                        classes.forEach( function(value2) {
+                            var score = sprintf( "%5.3f", value2.score );
+                            var item = score + ':' + value2.class;
+                            class_items.push(item);
+                        });
+                        var sorted_items = class_items.sort( function(a, b) 
+                                                        { if ( a<b ) return 1; if ( a>b ) return -1 });
+                        console.log('sorted_items');
+                        console.log(sorted_items);
+                        sorted_items.forEach( function(value3) {
+                            output_text = output_text + value3 + '<br>\n';
+                        });
+                    });
+                }
+        // 顔検知の出力
+                var faces = data.faces;
+                if ( faces ) {
+                    output_text = output_text + '【顔検知】<br>\n';
+                    faces.forEach( function(value) {
+                        console.log(value);
+                        var score1 = sprintf( "%5.3f", value.age.score);
+                        var score2 = sprintf( "%5.3f", value.gender.score);
+                        var gender_j = '不明';
+                        if ( value.gender.gender === 'MALE' ) { gender_j = '男性'; }
+                        if ( value.gender.gender === 'FAMALE' ) { gender_j = '女性'; }
+                        var age_j;
+                        if ( value.age.min ) {
+                            age_j = value.age.min + "歳 - " + value.age.max + "歳";
+                        } else {
+                            age_j = value.age.max + "歳以下" ;
+                        }
+                        var item = score1 + ": " + age_j + "  " + score2 + ': ' + gender_j + "<br>\n";
+                        output_text = output_text + item;
+                        var location = value.face_location;                    
+                        var x = location.left * ratioX;
+                        var y = location.top * ratioY;
+                        var w = location.width * ratioX;
+                        var h = location.height * ratioY;
+                        ctx.strokeRect(x, y, w, h);
+                    });
+                }
+        // 文字検知の出力
+                var words = data.words;
+                if ( words ) {
+                    output_text = output_text + '【文字検知】<br>\n';
+                    words.forEach( function(value){
+                        console.log(value);
+                        var score = sprintf( "%5.3f", value.score);
+                        var word = value.word;
+                        var item = score + ': ' + word + '<br>\n';
+                        output_text = output_text + item;
+                        var location = value.location;                    
+                        var x = location.left * ratioX;
+                        var y = location.top * ratioY;
+                        var w = location.width * ratioX;
+                        var h = location.height * ratioY;
+                        ctx.strokeRect(x, y, w, h);
+                    });
+                }
+                
                 var elem =  document.getElementById("result");
                 elem.style.fontSize = '70%';
-                var items = divide_br( data );
-                var items2 = items.map(function(elem, index, ar) { return divide_location(elem); });
-                var items3 = items2.filter(function(elem, index, ar) { return( elem ); }); 
-                console.log(items3);
-                ctx.strokeStyle = "rgb(0, 0, 255)";
-                items3.forEach( function(value) {
-                    var x = value.x * ratioX;
-                    var y = value.y * ratioY;
-                    var w = value.w * ratioX;
-                    var h = value.h * ratioY;
-                    console.log( 'x:' + x + '  y:' + y + '  w:' + w + '   h:' + h);
-                    ctx.strokeRect(value.x * ratioX, value.y * ratioY, value.w * ratioX, value.h * ratioY);
-                });
-                elem.innerHTML = data;
+                elem.innerHTML = output_text;
+                $("#send").prop("disabled", false);
                 console.log("SUCCESS : ", data);
                 $("#send").prop("disabled", false);
             },
@@ -118,6 +179,7 @@ $(function(){
                 ctx.clearRect(0, 0, canvasW, canvasH);
                 ctx.drawImage(image, 0, 0, imageW, imageH);
                 ctx.strokeRect(0, 0, imageW, imageH);
+                ctx.strokeStyle = "rgb(0, 0, 255)";
             }
             image.src = evt.target.result;
         })

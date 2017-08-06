@@ -6,7 +6,6 @@ var multer  = require('multer');
 var os = require('os');
 var async = require('async');
 var extend = require('extend');
-var sprintf = require('sprintf').sprintf;
 var API_TIMEOUT = 40000;  // msec
 
 if (fs.existsSync('./env.js')) {
@@ -122,110 +121,8 @@ app.post('/send', upload.single('image'), function(req, res) {
             return extend(true, prev, cur);
         });
         if (combine.value) {
-            // save the classifier_id as part of the response
-            if (req.body.classifier_id) {
-                combine.value.classifier_ids = req.body.classifier_id;
-            }
-            combine.value.raw = {};
-            methods.map(function(methodName, idx) {
-                combine.value.raw[methodName] = results[idx].value;
-            });
-            console.log('=====ALL=====');  
-            console.log(combine.value);
-            console.log('=====PART=====');
-            var result = "";
-
-// 分類器結果出力            
-            if ( combine.value.raw.classify && combine.value.raw.classify.images_processed ) {
-                var result1 = combine.value.raw.classify.images[0].classifiers;
-                console.log(result1);
-                var result4;  // for ocr
-                var result6;  // for face
-                result1.forEach(function(val1, index1,ar1){
-                    var name = val1.name;
-                    var list1 = [];
-                    var name_j = 'カスタム';
-                    if ( name === 'default' ) { name_j = 'デフォルト'; }
-                    if ( name === 'food' ) { name_j = '食物'; }
-                    console.log( "name: " + name );
-                    result = result + "【分類器】" + name_j + "<br>";
-                    var result2 = val1.classes;
-                    result2.forEach(function(val2, index2, ar2){
-                        var classname = val2.class;
-                        var score = sprintf('%.3f', val2.score);
-                        list1.push(score + ': ' + classname);
-                    });
-                    list1.sort(function(a, b) {if ( a < b ) {return 1;} else {return -1;}});
-                    list1.forEach(function(val3, index3, ar3) {
-                        console.log(val3);
-                        result = result + val3 + '<br>';
-                    });
-                    result = result + '<br>';
-                });
-            }
-                
-// 文字認識結果出力            
-            if ( combine.value.raw.recognizeText && combine.value.raw.recognizeText.images_processed ) {
-                result4 = combine.value.raw.recognizeText.images[0].words;
-                var list2 = [];
-                result4.forEach(function(val4, index4, ar4) {
-                    var word = val4.word;
-                    var score = sprintf('%.3f', val4.score);
-                    var left = val4.location.left;
-                    var top = val4.location.top;
-                    var width = val4.location.width;
-                    var height = val4.location.height;
-                    var location_text = sprintf( "%d,%d,%d,%d", left, top, width, height);
-                    list2.push(score + ": " + word + ": " + location_text);
-                })
-                if ( list2.length ) {
-                    console.log('OCR');
-                    result = result + "【文字認識】<br>";
-                    list2.forEach(function(val5, index5, ar5) {
-                        console.log(val5);
-                        result = result + val5 + '<br>';
-                    });
-                   result = result + '<br>';
-               }
-            }
-
-// 顔認識結果出力
-            if ( combine.value.raw.detectFaces && combine.value.raw.detectFaces.images_processed ) {
-                result6 = combine.value.raw.detectFaces.images[0].faces;
-                var list3 = [];
-                result6.forEach(function(val6, index6, ar6) {
-                    var age = val6.age;
-                    var gender = val6.gender;
-                    var location = val6.face_location;
-                    var score1 = sprintf('%.3f', age.score);
-                    var score2 = sprintf('%.3f', gender.score);
-                    var gender_j = "";
-                    if ( gender.gender === 'MALE' ) { gender_j = '男性';}
-                    if ( gender.gender === 'FEMALE' ) { gender_j = '女性';}
-                    var left = location.left;
-                    var top = location.top;
-                    var width = location.width;
-                    var height = location.height;
-                    var location_text = sprintf( "%d,%d,%d,%d", left, top, width, height);
-                    var item;
-                    if ( age.min ) {
-                        item = score1 + ": " + age.min + "歳 - " + age.max + "歳     " + score2 + ": " + gender_j;
-                    } else {
-                        item = score1 + ": " + age.max + "歳以下   " + score2 + ": " + gender_j;
-                    }
-                    list3.push(item + ': ' + location_text);
-                })
-                if ( list3.length ) {
-                    console.log('FACE');
-                    result = result + "【顔認識】<br>";
-                    list3.forEach(function(val7, index7, ar7) {
-                        console.log(val7);
-                        result = result + val7 + '<br>';
-                    });
-                   result = result + '<br>';
-               }
-            }
-
+            var result = combine.value.images[0];
+            console.log(result);
             res.send(result);
         } else {
             res.status(400).json(combine.error);
