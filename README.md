@@ -35,7 +35,7 @@ Bluemixにログインし、サービスの中からVisual Recognitionを選ん�
   
 ![](readme_images/crt-vr-step1.png)  
   
-サービス名は discovery-service-1を指定し、プランはデフォルトの無料のものを選択します。  
+サービス名は vr-service-1を指定し、プランはデフォルトの無料のものを選択します。  
   
 ![](readme_images/crt-vr-step2.png)  
   
@@ -53,8 +53,9 @@ cf pushコマンドで指定するyour_appl_nameはBluemix上のインスタン�
     cf api https://api.ng.bluemix.net/
     cf login
     cf push <your_appl_name>
-デプロイが完了したら、サンプルアプリケーションが利用できるはずです。
-既存のVRインスタンスを使いたい場合は、manifest.yml内の記載を変更するか、Bluemix管理画面でバインド先サービスの設定を行って下さい。
+デプロイが完了したら、サンプルアプリケーションが利用できるはずです。  
+既存のVRインスタンスを使いたい場合は、manifest.yml内の記載を変更するか、Bluemix管理画面でバインド先サービスの設定を行って下さい。  
+  
 カスタム分類器も使いたい場合は、以下の手順に従って下さい。
 
 ## 環境変数の設定 (オプション)
@@ -62,7 +63,7 @@ cf pushコマンドで指定するyour_appl_nameはBluemix上のインスタン�
 
     cf set-env <your_appl_name> classifier_id xxxxxxxxxxxx
     cf restage <your_appl_name>
-
+restageコマンドの後で再構成が行われます。再構成完了後には、カスタム分類器が利用可能になっています。
 
 [cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
 [git]: https://git-scm.com/downloads
