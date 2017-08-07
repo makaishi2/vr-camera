@@ -5,9 +5,10 @@
 
 * 日本語対応
 * スマホから撮った写真をすぐに解析可能  
-ブラウザのアプリケーションですが、iPhone/iPadを使う場合Safariを使うことで対応可能です。
+ブラウザのアプリケーションですが、iPhone/iPadの場合、Safariを使うことでカメラの利用が可能です。
 * 複数の機能を同時に呼出し可能  
-一つのイメージに対して以下の機能を同時に呼び出すことが可能です。どの機能を呼び出すかは、画面のチェックボックスで指定します。
+一つのイメージに対して以下の機能を同時に呼び出すことが可能です。  
+どの機能を呼び出すかは、画面のチェックボックスで指定します。
 
 対応している機能  
 
@@ -64,6 +65,9 @@ cf pushコマンドで指定するyour_appl_nameはBluemix上のインスタン�
     cf set-env <your_appl_name> classifier_id xxxxxxxxxxxx
     cf restage <your_appl_name>
 restageコマンドの後で再構成が行われます。再構成完了後には、カスタム分類器が利用可能になっています。
+
+## (参考)サンプルイメージ
+sample_images配下にテスト用のサンプルイメージが入っていて、動作確認に利用可能です。
 
 [cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
 [git]: https://git-scm.com/downloads
