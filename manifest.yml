@@ -2,4 +2,4 @@ applications:
 - path: .
   memory: 128M
   services:
-  - visualrecognition-1
+  - vr-service-1
