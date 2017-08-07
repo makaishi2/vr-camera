@@ -17,15 +17,54 @@
 * 顔認識
 * 文字認識
 
-
 デモ画面  
 ![デモ](readme_images/vr-demo.gif)
 
+## 事前準備
 
-## 導入手順 (ローカル)
+* Bluemixアカウントの準備
+    * [Bluemixアカウントを作る][sign_up] か、あるいは既存のBluemixアカウントを利用します。
+* 次の前提ソフトを導入します。
+    *  [git][git] コマンドラインツール
+    *  [Cloud Foundry][cloud_foundry] コマンドラインツール
 
-t.b.d
+      注意: Cloud Foundaryのバージョンは最新として下さい。
 
-## 導入手順 (Bluemix) 
- 
-t.b.d.  
+### Visual Recognitionサービスの作成
+Bluemixにログインし、サービスの中からVisual Recognitionを選んで作成します。  
+  
+![](readme_images/crt-vr-step1.png)  
+  
+サービス名は discovery-service-1を指定し、プランはデフォルトの無料のものを選択します。  
+  
+![](readme_images/crt-vr-step2.png)  
+  
+
+## ソースのダウンロード
+git cloneコマンドは、カレントディレクトリのサブディレクトリにソースがダウンロードされるので、あらかじめ適当なサブディレクトリを作り、そこにcdしてから下記のコマンドを実行します。
+
+    git clone https://git.ng.bluemix.net/akaishi/vr-camera.git
+
+## Bluemix環境へのデプロイ
+cf loginコマンドではemailとpasswordを聞かれるのでbluemix登録時のemailアドレスとパスワードを指定します。  
+cf pushコマンドで指定するyour_appl_nameはBluemix上のインスタンス名であると同時に、インターネット上のURL名にもなるので、ユニークなものを指定します。  
+
+    cd vr-camera
+    cf api https://api.ng.bluemix.net/
+    cf login
+    cf push <your_appl_name>
+デプロイが完了したら、サンプルアプリケーションが利用できるはずです。
+既存のVRインスタンスを使いたい場合は、manifest.yml内の記載を変更するか、Bluemix管理画面でバインド先サービスの設定を行って下さい。
+カスタム分類器も使いたい場合は、以下の手順に従って下さい。
+
+## 環境変数の設定 (オプション)
+事前にカスタム分類器のIDを調べておき、下記の手順で環境変数に設定します。
+
+    cf set-env <your_appl_name> classifier_id xxxxxxxxxxxx
+    cf restage <your_appl_name>
+
+
+[cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
+[git]: https://git-scm.com/downloads
+[sign_up]: https://bluemix.net/registration
+
