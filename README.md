@@ -1,13 +1,28 @@
-# Node.js Hello World Sample
+# Visual Recognition サンプルアプリ 
 
-This application demonstrates a simple, reusable Node.js web application based on the Express framework.
+このアプリケーションはVisual Recognitionの機能を簡単に確認するためのサンプルアプリケーションです。
+次の特徴を持っています。
 
-## Run the app locally
+* 日本語対応
+* スマホから撮った写真をすぐに解析可能  
+ブラウザのアプリケーションですが、iPhone/iPadを使う場合Safariを使うことで対応可能です
+* 複数の機能を同時に呼出し可能  
+一つのイメージに対して以下の機能を同時に呼び出すことが可能です。どの機能を呼び出すかは、画面のチェックボックスで指定します。
 
-1. [Install Node.js][]
-1. cd into this project's root directory
-1. Run `npm install` to install the app's dependencies
-1. Run `npm start` to start the app
-1. Access the running app in a browser at <http://localhost:6001>
+対応している機能  
 
-[Install Node.js]: https://nodejs.org/en/download/
+* 一般種別(分類器名=default)
+* 一般種別(分類器名=food)
+* カスタム分類器
+* 顔認識
+* 文字認識
+
+(t.b.d 画面コピー)
+
+## 導入手順 (ローカル)
+
+t.b.d
+
+## 導入手順 (Bluemix) 
+ 
+t.b.d.  
