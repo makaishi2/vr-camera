@@ -13,7 +13,7 @@ if (fs.existsSync('./env.js')) {
 }
 
 var appEnv = cfenv.getAppEnv();
-var vr_credentials = appEnv.getServiceCreds('/visualrecognition-/');
+var vr_credentials = appEnv.getServiceCreds('vr-service-1');
 var visualRecognition = new watson.VisualRecognitionV3({
     version_date: '2015-05-19',
     api_key: vr_credentials.api_key

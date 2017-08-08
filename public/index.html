@@ -15,44 +15,6 @@ var ratioY;
 var ctx;
 var canvas;
 
-function divide_br( text ) {
-   var items = [];
-   var index = text.indexOf('<br>');
-   var count = 0
-   while( index != -1 ) {
-       var item = text.slice(0, index );
-       items.push(item);
-       text = text.slice(index + 4);
-       index = text.indexOf('<br>');
-   }
-   items.push(text);
-   return items;
-}
-
-function divide_location( text ) {
-    var text_result;
-    var index1 = text.indexOf(': ');
-    if ( index1 == -1 ) {
-        return null;
-    }
-    var text2 = text.slice( index1 + 2);
-    var index2 = text2.indexOf(': ');
-    if ( index2 == -1 ) {
-        return null;
-    }
-    var text3 = text2.slice( index2 + 2);
-    var index3 = text3.indexOf(': ');
-    if ( index3 == -1 ) {
-        text_result = text3;
-   } else {
-       text_result = text3.slice( index3 + 2);
-    }
-    var locs = text_result.split(',');
-    var location = { x: locs[0], y: locs[1], w: locs[2], h: locs[3] };
-console.log(location);    
-    return location;
-}
-
 $(document).ready(function () {
     $("#send").click(function (event) {
         var elem =  document.getElementById("result");
