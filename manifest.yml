@@ -1,5 +1,3 @@
 applications:
 - path: .
   memory: 128M
-  services:
-  - visualrecognition-1

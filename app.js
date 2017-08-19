@@ -1,29 +1,44 @@
-var express = require('express');
-var fs = require('fs');
-var cfenv = require('cfenv');
-var watson = require('watson-developer-cloud');
-var multer  = require('multer');
-var os = require('os');
-var async = require('async');
-var extend = require('extend');
-var API_TIMEOUT = 40000;  // msec
+/**
+ * Copyright 2017 IBM Corp. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-if (fs.existsSync('./env.js')) {
-    Object.assign(process.env, require('./env.js'));
-}
+'use strict';
+const express = require('express');
+const fs = require('fs');
+const cfenv = require('cfenv');
+const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+const multer  = require('multer');
+const os = require('os');
+const async = require('async');
+const extend = require('extend');
+const dotenv = require('dotenv');
+const API_TIMEOUT = 40000;  // 40 sec
+
+dotenv.config({silent: true});
 
 var appEnv = cfenv.getAppEnv();
-var vr_credentials = appEnv.getServiceCreds('vr-service-1');
-var visualRecognition = new watson.VisualRecognitionV3({
-    version_date: '2015-05-19',
-    api_key: vr_credentials.api_key
-});
+var api_key = process.env.API_KEY;
+var classifier_id = process.env.CLASSIFIER_ID;
 
-var classifier_id;
-if (process.env.classifier_id) {
-    classifier_id = process.env.classifier_id;
-    console.log( "classifier_id: " + classifier_id);
-}
+var methods;
+var classifier_ids;
+
+var visualRecognition = new VisualRecognitionV3({
+    version_date: '2015-05-19',
+    api_key: api_key
+});
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
@@ -46,7 +61,6 @@ var upload = multer({
     storage: storage
 });
 
-
 app.post('/send', upload.single('image'), function(req, res) {
     console.log( req.file );
     console.log( req.body );
@@ -56,43 +70,23 @@ app.post('/send', upload.single('image'), function(req, res) {
         res.status(400).send('parameter error!');
     }
     
+// set methods and calssifier_ids
     console.log( vr_type );
-    var params = { images_file: fs.createReadStream(req.file.path), 'Accept-Language': 'ja' };
-    params.threshold = 0.5;
-
-    var methods = [];
-    var classifier_ids = [];
-
-    if (vr_type.indexOf('1') != -1) {
-        console.log("type 1");
-        classifier_ids.push('default');
-    }
-    if (vr_type.indexOf('2') != -1) {
-        console.log("type 2");
-        classifier_ids.push('food');
-    }
-    if (vr_type.indexOf('3') != -1 && classifier_id) {
-        console.log("type 3");
-        classifier_ids.push(classifier_id);
-    }
-    if ( classifier_ids.length ) {
-        methods.push('classify');
-    }
-    if (vr_type.indexOf('4') != -1) {
-        console.log("type 4");
-        methods.push('detectFaces');
-    }
-    if (vr_type.indexOf('5') != -1) {
-        console.log("type 5");
-        methods.push('recognizeText');
-    }
-    params.classifier_ids = classifier_ids;
-
-    if ( params.classifier_ids.length ) {
-        console.log(params.classifier_ids);
-    }
+    methods = [];
+    classifier_ids = [];
+    set_methods(vr_type);
+    if ( classifier_ids.length ) { console.log(classifier_ids); }
     console.log(methods);
 
+// set vr params
+    var params = { 
+        images_file: fs.createReadStream(req.file.path), 
+        'Accept-Language': 'ja',
+        threshold: 0.5,
+        classifier_ids: classifier_ids
+    };
+
+// call vr api's
     async.parallel(methods.map(function(method) {
         var fn = visualRecognition[method].bind(visualRecognition, params);
         if (method === 'recognizeText' || method === 'detectFaces') {
@@ -138,3 +132,29 @@ function deleteUploadedFile(readStream) {
     });
 }
 
+// set methods and classifier_id's
+function set_methods(vr_type) {
+    if (vr_type.indexOf('1') != -1) {
+        console.log("type 1");
+        classifier_ids.push('default');
+    }
+    if (vr_type.indexOf('2') != -1) {
+        console.log("type 2");
+        classifier_ids.push('food');
+    }
+    if (vr_type.indexOf('3') != -1 && classifier_id) {
+        console.log("type 3");
+        classifier_ids.push(classifier_id);
+    }
+    if ( classifier_ids.length ) {
+        methods.push('classify');
+    }
+    if (vr_type.indexOf('4') != -1) {
+        console.log("type 4");
+        methods.push('detectFaces');
+    }
+    if (vr_type.indexOf('5') != -1) {
+        console.log("type 5");
+        methods.push('recognizeText');
+    }
+}
