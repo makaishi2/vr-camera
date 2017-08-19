@@ -1,3 +1,8 @@
 applications:
 - path: .
   memory: 128M
+<<<<<<< HEAD
+=======
+  services:
+  - vr-service-1
+>>>>>>> 4e360c4cc4a8e004f07da986867e6b0b3b9fb246

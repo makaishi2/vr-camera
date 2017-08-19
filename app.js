@@ -29,6 +29,7 @@ const API_TIMEOUT = 40000;  // 40 sec
 dotenv.config({silent: true});
 
 var appEnv = cfenv.getAppEnv();
+<<<<<<< HEAD
 var api_key = process.env.API_KEY;
 var classifier_id = process.env.CLASSIFIER_ID;
 
@@ -36,6 +37,10 @@ var methods;
 var classifier_ids;
 
 var visualRecognition = new VisualRecognitionV3({
+=======
+var vr_credentials = appEnv.getServiceCreds('vr-service-1');
+var visualRecognition = new watson.VisualRecognitionV3({
+>>>>>>> 4e360c4cc4a8e004f07da986867e6b0b3b9fb246
     version_date: '2015-05-19',
     api_key: api_key
 });
