@@ -130,9 +130,7 @@ cf push <your_appl_name>
 ## (参考)サンプルイメージ
 sample_images配下にテスト用のサンプルイメージが入っていて、動作確認に利用可能です。
 
-![](sample_images/apple.png)  
-![](sample_images/face1.png)  
-![](sample_images/moji.png) 
+![](sample_images/apple.png)  ![](sample_images/face1.png)  ![](sample_images/moji.png) 
 
 
 
