@@ -23,7 +23,19 @@
 
 
 ## 事前準備
-### Bluemixアカウントの準備[Bluemixアカウントを作る][sign_up] か、あるいは既存のBluemixアカウントを利用します。 ### 前提ソフトの導入次の前提ソフトを導入します。Node.jsはローカルで動かす場合に必要となります。    [gitコマンドラインツール][git]  [Cloud Foundryコマンドラインツール][cloud_foundry]  [Node.js][node_js]   注意: Cloud Foundaryのバージョンは最新として下さい。 ### ソースのダウンロードカレントディレクトリのサブディレクトリにソースはダウンロードされるので、あらかじめ適当なサブディレクトリを作り、そこにcdしておきます。
+### Bluemixアカウントの準備
+
+[Bluemixアカウントを作る][sign_up] か、あるいは既存のBluemixアカウントを利用します。
+### 前提ソフトの導入
+次の前提ソフトを導入します。Node.jsはローカルで動かす場合に必要となります。 
+
+[gitコマンドラインツール][git] 
+[Cloud Foundryコマンドラインツール][cloud_foundry]  
+[Node.js][node_js] 
+  注意: Cloud Foundaryのバージョンは最新として下さい。 
+
+### ソースのダウンロード
+カレントディレクトリのサブディレクトリにソースはダウンロードされるので、あらかじめ適当なサブディレクトリを作り、そこにcdしておきます。
   ```git clone https://git.ng.bluemix.net/akaishi/vr-camera.git```
 ### Visual Recognitionサービスの作成
 Bluemixにログインし、サービスの中からVisual Recognitionを選んで作成します。  
