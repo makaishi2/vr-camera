@@ -89,15 +89,9 @@ app.post('/send', upload.single('image'), function(req, res) {
 // call vr api's
     async.parallel(methods.map(function(method) {
         var fn = visualRecognition[method].bind(visualRecognition, params);
-        if (method === 'recognizeText' || method === 'detectFaces') {
-          return async.reflect(async.timeout(fn, API_TIMEOUT));
-        } else {
-          return async.reflect(fn);
-        }
+        return async.reflect(async.timeout(fn, API_TIMEOUT));
     }), function(err, results) {
-    // delete the recognized file
         deleteUploadedFile(params.images_file);
-
         if (err) {
             console.log(err);
             return res.status(err.code || 500).json(err);
@@ -105,15 +99,13 @@ app.post('/send', upload.single('image'), function(req, res) {
     // combine the results
         var combine = results.map(function(result) {
             if (result.value && result.value.length) {
-        // value is an array of arguments passed to the callback (excluding the error).
-        // In this case, it's the result and then the request object.
-        // We only want the result.
                 result.value = result.value[0];
             }
-          return result;
+            return result;
         }).reduce(function(prev, cur) {
             return extend(true, prev, cur);
         });
+    // return VR result       
         if (combine.value) {
             var result = combine.value.images[0];
             console.log(result);
