@@ -76,7 +76,13 @@ npm install
   
 ### 環境変数の設定
 
-カレントディレクトリにあるexample.envをテキストエディタで開いて、API\_KEYの値を設定します。  
+カレントディレクトリにあるlocal.env.sampleをlocal.envにコピーします。  
+  
+```
+cp local.env.sample local.env
+```
+  
+テキストエディタでlocal.env開いて、API\_KEYの値を設定します。  
 カスタム分類器を使いたい場合は、CLASSIFIER\_IDの指定も行います。  
 カスタム分類器を使わない場合は、CLASSIFIER\_IDをコメントアウトのままにして下さい。
   
@@ -85,15 +91,16 @@ npm install
 API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 CLASSIFIER_ID=xxxxx_xxxxxxxxx
 ```    
+
+### Node.jsの起動
       
-設定が完了したら、次のコマンドで結果を .envにコピーしたのち、ローカルでnode.jsを起動します。
+設定が完了したら、次のコマンドでnode.jsを起動します。
   
 ```
-cp example.env .env
 npm start
 ```
 
-正常にNode.jsが起動できていれば、ブラウザから [http://localhost:6012][local_url] のURLでアプリケーションを起動できます。
+正常にNode.jsが起動できていれば、ブラウザから [http://localhost:6010][local_url] のURLでアプリケーションを起動できます。
 
 
 ## Bluemix環境へのデプロイ
@@ -138,5 +145,5 @@ sample_images配下にテスト用のサンプルイメージが入っていて�
 [cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
 [git]: https://git-scm.com/downloads
 [sign_up]: https://bluemix.net/registration
-[local_url]: http://localhost:6012
+[local_url]: http://localhost:6010
 

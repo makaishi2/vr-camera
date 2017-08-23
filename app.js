@@ -17,18 +17,22 @@
 'use strict';
 const express = require('express');
 const fs = require('fs');
-const cfenv = require('cfenv');
-const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 const multer  = require('multer');
 const os = require('os');
 const async = require('async');
 const extend = require('extend');
 const dotenv = require('dotenv');
+const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 const API_TIMEOUT = 40000;  // 40 sec
 
-dotenv.config({silent: true});
+// 構成情報の取得
+if (fs.existsSync('local.env')) {
+  console.log('構成情報をlocal.envから取得します');
+  require('dotenv').config({ path: 'local.env' });
+} else {
+  console.log('環境変数から構成情報を取得します');
+}
 
-var appEnv = cfenv.getAppEnv();
 var api_key = process.env.API_KEY;
 var classifier_id = process.env.CLASSIFIER_ID;
 
@@ -42,9 +46,12 @@ var visualRecognition = new VisualRecognitionV3({
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
-app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.log("server starting on " + appEnv.url);
+
+// VCAP_APP_PORTが設定されている場合はこのポートでlistenする (Bluemixのお作法)
+var port = process.env.VCAP_APP_PORT || 6010;
+app.listen(port, function() {
+  // eslint-disable-next-line
+  console.log('Server running on port: %d', port);
 });
 
 // Setup the upload mechanism
