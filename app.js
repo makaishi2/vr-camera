@@ -29,19 +29,15 @@ const API_TIMEOUT = 40000;  // 40 sec
 if (fs.existsSync('local.env')) {
   console.log('構成情報をlocal.envから取得します');
   require('dotenv').config({ path: 'local.env' });
-} else {
-  console.log('環境変数から構成情報を取得します');
 }
 
-var api_key = process.env.API_KEY;
 var classifier_id = process.env.CLASSIFIER_ID;
 
 var methods;
 var classifier_ids;
 
 var visualRecognition = new VisualRecognitionV3({
-    version_date: '2015-05-19',
-    api_key: api_key
+    version_date: '2015-05-19'
 });
 
 var app = express();
