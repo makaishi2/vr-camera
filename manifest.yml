@@ -1,7 +1,7 @@
 ---
 declared-services:
   visual-recognition-1:
-    label: visual_recognition
+    label: watson_vision_combined
     plan: free
 applications:
 - path: .
