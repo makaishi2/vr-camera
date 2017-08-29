@@ -1,9 +1,8 @@
 ---
 declared-services:
-  visual-recognition-service:
-    label: visual-recognition-1
+  visual-recognition-1:
+    label: visual-recognition
     plan: free
-
 applications:
 - path: .
   memory: 128M
