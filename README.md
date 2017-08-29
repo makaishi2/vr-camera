@@ -208,4 +208,6 @@ sample_images配下にテスト用のサンプルイメージが入っていて�
 [git]: https://git-scm.com/downloads
 [sign_up]: https://bluemix.net/registration
 [local_url]: http://localhost:6010
+[bluemix_dashboard]: https://console.bluemix.net/dashboard/
+
 
