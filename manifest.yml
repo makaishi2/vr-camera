@@ -1,7 +1,7 @@
 ---
 declared-services:
   visual-recognition-1:
-    label: visual-recognition
+    label: visual_recognition
     plan: free
 applications:
 - path: .
