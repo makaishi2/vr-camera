@@ -53,6 +53,36 @@ Bluemixアカウントを使って、 [Bluemixダッシュボード][bluemix_das
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/build-step2.png)
 
+- 下図のようにBuild StageとDeploy Stageの両方が「成功」となればアプリケーションのビルドは成功です。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/build-step3.png)
+
+- 下の画面からダッシュボードの画面を表示します。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/goto_dashboard.png)
+
+- 赤枠で囲んだアプリケーションのリンクをクリックして、アプリケーションを起動します。  
+※　Visual Recognitionのインスタンスを作成してからAPIキーが有効になるまで数分かかるので、アプリケーション作成直後はエラーになります。5分程度待ってからアプリケーションを起動するようにして下さい。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/goto_appl.png)
+
+## カスタム分類器の利用
+カスタム分類器を利用するためには、追加で以下の手順が必要となります。
+事前にカスタム分類器のCLASSIFIER_IDを調べておいて下さい。
+
+### VRサービスの再バインド
+新規に作成したVRサービスでなく、事前に作成したVRサービスを利用する場合は、VRサービスのアンバインド・再バインドを行い、利用したいVRサービスを接続対象に変更します。  
+
+### 環境変数の設定
+アプリケーションの管理画面から「ランタイム」「環境変数」をクリックし、画面を下にスクロールして"CLASSIFIRE\_ID"とその値を設定します。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/env-set1.png)
+
+
+# Bluemixへの手動導入(以下工事中)
+より細かくBluemixの挙動を知りたい場合は、以下の「手動導入」の手順をお勧めします。  
+「手動導入」には導入先により「ローカルへの導入」と「Bluemixへの導入」があります。  
+「事前準備」はどちらの導入先を選ぶ場合も共通に必要な手順です。  
 
 ## 事前準備
 
