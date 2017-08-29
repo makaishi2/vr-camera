@@ -6,4 +6,6 @@ declared-services:
 applications:
 - path: .
   memory: 128M
+  services:
+  - visual-recognition-1
   
