@@ -24,6 +24,36 @@
 ※ 個別機能のうち、文字認識は開発版、食品種別分類はベータ版です。  
 将来の製品化を保証するものでない点をご理解下さい。
 
+
+# Bluemix環境への自動導入
+最も簡単にBluemix上にデモ環境を作りたい場合は、「自動導入」をお勧めします。  
+その場合、以下の手順に従って下さい。 
+
+## 事前準備
+Bluemixアカウントを持っていない場合は [Bluemixアカウントを作る][sign_up] に従い、Bluemixアカウントを作成します。  
+Bluemixアカウントを使って、 [Bluemixダッシュボード][bluemix_dashboard] を表示させて下さい。
+
+## サービス・インスタンスの自動生成
+  
+- 次のボタンを押して下さい。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://git.ng.bluemix.net/akaishi/vr-camera)
+
+
+- 下の画面が表示されたら「アプリ名」をわかりやすいものに変更し(アプリケーションのURLの一部になります) 、「デプロイ」ボタンをおします。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/build-step1.png)
+
+
+* このボタンを押すことにより次の処理が自動的に行われます。
+  - CloudFoundaryアプリケーションの作成
+  - Watson APIサービスのVisual Recognitionインスタンスの作成
+  - Visual RecognitionインスタンスとCloudFoundryアプリケーションのバインド
+- 次の画面が表示されたら一番右の「Delivery Pipeline」を選択します。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/build-step2.png)
+
+
 ## 事前準備
 
 ### Bluemixアカウントの準備
