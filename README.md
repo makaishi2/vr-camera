@@ -79,7 +79,7 @@ Bluemixアカウントを使って、 [Bluemixダッシュボード][bluemix_das
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](readme_images/env-set1.png)
 
 
-# Bluemixへの手動導入(以下工事中)
+# Bluemixへの手動導入
 より細かくBluemixの挙動を知りたい場合は、以下の「手動導入」の手順をお勧めします。  
 「手動導入」には導入先により「ローカルへの導入」と「Bluemixへの導入」があります。  
 「事前準備」はどちらの導入先を選ぶ場合も共通に必要な手順です。  
@@ -112,20 +112,11 @@ Bluemixにログインし、サービスの中からVisual Recognitionを選ん�
   
 ![](readme_images/crt-vr-step1.png)  
   
-サービス名は任意(デフォルトで可)、プランはデフォルトの無料のものを選択します。  
+サービス名は「visual-recognition-1」、プランはデフォルトの無料のものを選択します。  
   
 ![](readme_images/crt-vr-step2.png)  
   
-### API Keyの確認
-作成したVisual Recognitionのサービスで、API Keyの確認を行います。  
-
-ダッシュボードで作成したVisual Recognitionのサービスを選択します。  
-VRの管理画面から「サービス資格情報」を選択し、更に画面右の「資格情報の表示」をクリックします。  
-表示されたJSON形式のデータから、api_keyの値をコピーし、テキストエディタなどに貼り付けて保存します。(下図)  
-
-![](readme_images/vr-step3.png)  
-  
-カスタム学習器による分類結果も表示したい場合は、カスタム分類器のclassifier_idも事前に調べておきます。  
+カスタム学習器による分類結果も表示したい場合は、カスタム分類器のclassifier\_idを事前に調べておきます。  
   
 ## ローカル環境へのデプロイ
 ### プログラムの導入
@@ -135,7 +126,16 @@ VRの管理画面から「サービス資格情報」を選択し、更に画面
 cd vr-camera
 npm install
 ```
-  
+
+### API Keyの確認
+作成したVisual Recognitionのサービスで、API Keyの確認を行います。  
+
+ダッシュボードで作成したVisual Recognitionのサービスを選択します。  
+VRの管理画面から「サービス資格情報」を選択し、更に画面右の「資格情報の表示」をクリックします。  
+表示されたJSON形式のデータから、api_keyの値をコピーし、テキストエディタなどに貼り付けて保存します。(下図)  
+
+![](readme_images/vr-step3.png)  
+    
 ### 環境変数の設定
 
 カレントディレクトリにあるlocal.env.sampleをlocal.envにコピーします。  
@@ -179,10 +179,8 @@ cf push <your_appl_name>
 ```
   
 ### 環境変数のセット
-前の手順でローカル環境でNode.jsを動かしている場合、cf pushコマンドでlocal.envファイルのコピーも行われるので、以下の手順は必要ありません。  
-以下の手順はローカルでのテストを省いてBluemix上で動かす場合、または継続的開発環境の設定をBluemix上で行いGitHub上のソースをBluemix環境に直接デプロイする場合に必要となります。 
   
-環境変数の値をCloudFoundary管理画面から、「ランタイム」「環境変数」を選択して設定します。  
+カスタム分類器を利用する場合は、環境変数の値をCloudFoundary管理画面から、「ランタイム」「環境変数」を選択して設定します。  
   
 ![setting](readme_images/vr-step4.png)  
   
