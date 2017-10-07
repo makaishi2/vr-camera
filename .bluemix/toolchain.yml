@@ -26,7 +26,6 @@ services:
     service_id: githubpublic
     parameters:
       repo_name: '{{toolchain.name}}'
-#      repo_url: 'https://github.com/open-toolchain/node-hello-world'
        repo_url: 'https://git.ng.bluemix.net/akaishi/vr-camera'
       type: clone
       has_issues: true
