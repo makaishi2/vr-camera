@@ -5,7 +5,7 @@ declared-services:
     plan: free
 applications:
 - name aka-vr-sample1
-- path: .
+  path: .
   memory: 128M
   services:
   - visual-recognition-1
