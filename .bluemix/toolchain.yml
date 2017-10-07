@@ -23,7 +23,7 @@ toolchain:
       $ref: "#/messages/template.gettingStarted"
 services:
   sample-repo:
-    service_id: githubpublic
+    service_id: githubprivate
     parameters:
       repo_name: '{{toolchain.name}}'
       repo_url: 'https://git.ng.bluemix.net/akaishi/vr-camera'
