@@ -1,6 +1,6 @@
 # Visual Recognition サンプルアプリ 
 
-このアプリケーションはVisual Recognitionの機能を簡単に確認するためのサンプルアプリケーションです。  
+このアプリケーションはWatsonの画像認識APIである、Visual Recognitionの機能を簡単に確認するためのサンプルアプリケーションです。  
 次の特徴を持っています。
 
 * 日本語対応
