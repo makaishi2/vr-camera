@@ -4,8 +4,7 @@ declared-services:
     label: watson_vision_combined
     plan: free
 applications:
-- name: aka-vr-sample1
-  path: .
+- path: .
   memory: 128M
   services:
   - visual-recognition-1
