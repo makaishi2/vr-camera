@@ -103,11 +103,44 @@ https://<service_name>.mybluemix.com
 Bluemixで稼働しているNode.jsアプリケーションのソースは git cloneコマンドでダウンロードしたローカルファイルです。このソースを修正して、再度 "cf push \<service_name\>"コマンドを実行すると、Bluemix上のアプリケーションにも修正が反映されます。  
 自分でアプリケーションコードを開発したい場合は、このサンプルソースを雛形に試してみると、効率よくアプリケーション開発ができます。
 
-## (参考)サンプルイメージ
+
+## ローカルで起動する場合
+
+アプリケーションを修正する時は、ローカルでもテストできる方が便利です。そのための手順は以下の通りです。
+
+* Node.jsの導入  
+ローカルにNode.jsを導入する必要があります。
+[Node.jsダウンロード][node_js]からダウンロードして下さい。
+* 認証情報の確認  
+BluemixダッシュボードからVisual Recognitionサービスの管理画面を開き、API Keyの値を調べてテキストエディタなどにコピーします。
+* local.envファイルの設定
+次のコマンドでlocal.envファイルの雛形からlocal.envをコピーし、エディタで調べたAPI Keyを設定します。
+
+```
+$ cp local.env.sample local.env
+```
+
+```
+VISUAL_RECOGNITION_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+* Node.jsアプリケーションの導入、実行
+以下のコマンドでアプリケーションの導入、実行を行います。
+
+```
+$ npm install
+$ npm start
+```
+
+### (参考) Bluemixとローカル両方で動くアプリの作り方
+qittaに別記事 [Bluemix上のWatsonアプリをローカル環境で開発・デバッグする際のTips](https://qiita.com/makaishi2/items/06dd45ae50891d66aef5) をあげておきましたので、関心ある方はこちらも参考にされて下さい。
+
+
+### (参考)サンプルイメージ
 sample_images配下にテスト用のサンプルイメージが入っていて、動作確認に利用可能です。
 
 ![](sample_images/apple.png)  ![](sample_images/face1.png)  ![](sample_images/moji.png) 
 
+[node_js]: https://nodejs.org/ja/download/
 [cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
 [git]: https://git-scm.com/downloads
 [sign_up]: https://bluemix.net/registration
