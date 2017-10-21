@@ -47,7 +47,7 @@ Githubからアプリケーションのソースをダウンロードします�
 
 ```
 $ cd (適当なサブディレクトリ)
-$ git clone https://git.ng.bluemix.net/akaishi/vr-camera.git
+$ git clone https://github.com/makaishi2/vr-camera.git
 $ cd vr-camera
 ```
 
