@@ -69,7 +69,7 @@ $ cf login
 
 
 ```
-$ cf create-service watson_vision_combined free visual-recognition-1
+$ cf create-service watson_vision_combined lite visual-recognition-1
 $ cf create-service-key visual-recognition-1 myKey
 $ cf push <service_name>
 ```

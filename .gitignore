@@ -1,3 +1,4 @@
 node_modules
 local.env
 readme_images2
+.DS_Store

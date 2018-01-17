@@ -2,7 +2,7 @@
 declared-services:
   visual-recognition-1:
     label: watson_vision_combined
-    plan: free
+    plan: lite
 applications:
 - path: .
   memory: 128M
